@@ -1,4 +1,10 @@
+import { Product } from './../../_models/product';
 import { Component } from '@angular/core';
+import { ProductService } from '../../_services/product.service';
+import Swal from 'sweetalert2';
+import { CategoryService } from '../../_services/category.service';
+import { Category } from '../../_models/category';
+
 
 @Component({
   selector: 'app-product',
@@ -7,5 +13,53 @@ import { Component } from '@angular/core';
   styleUrl: './product.component.css'
 })
 export class ProductComponent {
+productList: Product[];
+product:Product = new Product();
+editProduct: any = {};
+errors: any = {};
+categoryList: Category[];
+
+constructor(private productService: ProductService,
+            private categoryService: CategoryService
+) {
+  this.getAll();
+  this.getCategories();
+}
+
+getAll(){
+  this.productService.getAll().subscribe({
+    next: values => this.productList = values,
+    error: err => console.log(err)
+  })
+}
+
+
+getCategories(){
+  this.categoryService.getAll().subscribe({
+    next:values => this.categoryList = values,
+    error: err => console.log(err)
+  })
+}
+
+
+
+create(){
+  this.productService.create(this.product).subscribe({
+    next: value => this.productList.push(value),
+    error: err => {
+      if(err.status===400){
+        console.log(err)
+        this.errors = err.error.errors;
+      }
+    },
+    complete: () => Swal.fire({
+          title: "Eklendi!",
+          text: "Ürün başarıyla eklendi.",
+          icon: "success"
+        }).then(()=> location.reload())
+  })
+}
+
+
 
 }

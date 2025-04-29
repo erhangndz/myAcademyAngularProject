@@ -8,6 +8,10 @@ declare var jQuery: any;
   styleUrl: './admin-layout.component.css'
 })
 export class AdminLayoutComponent {
+isSidebarOpen:boolean =false;
 
+toggleSidebar(){
+  this.isSidebarOpen = !this.isSidebarOpen;
+}
 
 }
