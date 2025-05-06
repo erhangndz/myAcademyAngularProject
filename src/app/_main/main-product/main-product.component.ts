@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ProductService } from '../../_services/product.service';
 import { Product } from '../../_models/product';
+import { CategoryService } from '../../_services/category.service';
+import { Category } from '../../_models/category';
 
 @Component({
   selector: 'app-main-product',
@@ -10,17 +12,27 @@ import { Product } from '../../_models/product';
 })
 export class MainProductComponent {
   products: Product[];
-
+  categories: Category[];
   /**
    *
    */
-  constructor(private productService: ProductService) {
+  constructor(private productService: ProductService,
+              private categoryService: CategoryService
+  ) {
     this.getAll();
+    this.getCategories();
   }
 
   getAll() {
     this.productService.getAll().subscribe({
       next: values => this.products = values
     });
+  }
+
+
+  getCategories(){
+this.categoryService.getAll().subscribe({
+  next: values => this.categories =values
+})
   }
 }
